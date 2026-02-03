@@ -7,6 +7,7 @@ import {
   AUTHOR_URL,
   REPO_NAME,
   REPO_URL,
+  TESTOWNIK_URL,
   VERSION,
 } from "@/constants";
 
@@ -27,9 +28,15 @@ Email: ${AUTHOR_EMAIL}
   },
 );
 
+const importQuizUrl = `${TESTOWNIK_URL}/import-quiz`;
+
 export const cardOutro = boxen(
   chalk.white(`
 Thank you for using ${REPO_NAME}.
+
+📥 Import your quiz 📥
+
+${chalk.underline(importQuizUrl)}
 
 ⭐ Star me on GitHub! ⭐
   
