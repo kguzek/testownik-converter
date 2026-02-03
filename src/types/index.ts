@@ -1,3 +1,3 @@
-export type { AdapterOptions } from "./adapters";
+export type * from "./adapters";
 
-export type { TestownikQuiz, TestownikQuestion } from "./testownik";
+export type * from "./testownik";

@@ -4,7 +4,7 @@ interface QuizPart {
   image_url?: string;
 }
 
-interface TestownikAnswer extends QuizPart {
+export interface TestownikAnswer extends QuizPart {
   is_correct: boolean;
 }
 

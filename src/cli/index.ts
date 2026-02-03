@@ -41,7 +41,6 @@ program
 
       adapter.writeOutput();
 
-      logger.info(`Quiz written to ${options.output}!`);
       logger.print(cardOutro);
     } catch (error) {
       logger.error(

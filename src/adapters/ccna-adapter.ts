@@ -1,14 +1,15 @@
 import type { TestownikQuestion, TestownikAnswer } from "@/types";
 
 import { BaseAdapter } from "./base-adapter";
+import { logger } from "@/logging";
 
 const QUESTION_REGEX = new RegExp(
-  String.raw`^(?:(?<number>\d+)\.\s+)?(?<question>.+)$\n(?<answers>(?:(?=^-\s).+$\n?)+\n?)`,
+  String.raw`^(?:(?<number>\d+)\.\s+)(?<question>[\s\S]+?)$\n(?<answers>(?:^- .+(?:\n(?!- ).+)*\n?)+)`,
   "gm",
 );
 
 const ANSWER_REGEX = new RegExp(
-  String.raw`^- (?<correct>\[✓\] )?(?<question>.+)$`,
+  String.raw`^- (?<correct>\[✓\] )?(?<answer>.+)$`,
   "gm",
 );
 
@@ -24,14 +25,32 @@ export class CcnaAdapter extends BaseAdapter {
       const answers: TestownikAnswer[] = [];
       ANSWER_REGEX.lastIndex = 0;
 
-      const rawAnswers = questionMatch.groups.answers;
+      const questionText = questionMatch.groups.question?.trim();
+      if (!questionText) {
+        logger.warn("Skipping question with no text");
+        continue;
+      }
+
+      const answersText = questionMatch.groups.answers;
+      if (!answersText) {
+        logger.warn(`Skipping question with no answers: '${questionText}'`);
+        continue;
+      }
+
       let answerMatch: RegExpExecArray | null;
       while (
-        (answerMatch = ANSWER_REGEX.exec(rawAnswers)) != null &&
+        (answerMatch = ANSWER_REGEX.exec(answersText)) != null &&
         answerMatch.groups != null
       ) {
+        const answerText = answerMatch.groups.answer?.trim();
+        if (answerText == null) {
+          logger.warn(
+            `Skipping answer with no text in question: ${questionText}`,
+          );
+          continue;
+        }
         const answer: TestownikAnswer = {
-          text: answerMatch.groups.question,
+          text: answerText,
           is_correct: answerMatch.groups.correct != null,
         };
         answers.push(answer);
@@ -40,7 +59,7 @@ export class CcnaAdapter extends BaseAdapter {
         continue;
       }
       const question: TestownikQuestion = {
-        text: questionMatch.groups.question,
+        text: questionText,
         answers,
         multiple: answers.filter((answer) => answer.is_correct).length > 1,
       };
