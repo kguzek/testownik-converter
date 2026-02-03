@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/kguzek/testownik-converter/compare/v1.0.4...v1.0.5) (2026-02-03)
+
+
+### Bug Fixes
+
+* **ci:** set provenance ([2d0f2a0](https://github.com/kguzek/testownik-converter/commit/2d0f2a0a0a15000eed16f7c808041c0a5dae3fae))
+
 ## [1.0.4](https://github.com/kguzek/testownik-converter/compare/v1.0.3...v1.0.4) (2026-02-03)
 
 
