@@ -34,6 +34,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Check formatting
+        run: pnpm format:check
+        if: always()
+
       - name: Check commit name
         run: pnpm commitlint --from-last-tag --verbose
         if: always()

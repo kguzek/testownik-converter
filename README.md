@@ -8,7 +8,7 @@ Currently, the only supported adapter is for converting quizzes exported from CC
 
 ### CCNA
 
-Invoke this adapter by running: 
+Invoke this adapter by running:
 
 ```sh
 npx testownik-converter ccna <filename>
