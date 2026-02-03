@@ -1,0 +1,22 @@
+{
+  "name": "testownik-converter",
+  "version": "1.0.0",
+  "description": "A command-line utility to convert quizzes into Solvro's Testownik format.",
+  "license": "MIT",
+  "author": "Konrad Guzek",
+  "type": "module",
+  "scripts": {
+    "build": "tsup"
+  },
+  "bin": {
+    "testownik-converter": "node dist/index.js"
+  },
+  "dependencies": {
+    "commander": "^14.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
