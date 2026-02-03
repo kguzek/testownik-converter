@@ -3,47 +3,40 @@ import type { TestownikQuestion, TestownikAnswer } from "@/types";
 import { BaseAdapter } from "./base-adapter";
 import { logger } from "@/logging";
 
-const QUESTION_REGEX = new RegExp(
-  String.raw`^(?:(?<number>\d+)\.\s+)(?<question>[\s\S]+?)$\n(?<answers>(?:^- .+(?:\n(?!- ).+)*\n?)+)`,
-  "gm",
-);
+const QUESTION_REGEX =
+  /^(?<number>\d+)\.\s+(?<question>[\s\S]+?)\n^-\s+(?<answers>.+(?:\r?\n.+)+)/gm;
 
-const ANSWER_REGEX = new RegExp(
-  String.raw`^- (?<correct>\[✓\] )?(?<answer>.+)$`,
-  "gm",
-);
+const ANSWER_REGEX = /^(?<correct>\[✓\]\s+)?(?<answer>[\s\S]+)/m;
 
 export class CcnaAdapter extends BaseAdapter {
   convertQuestions() {
-    QUESTION_REGEX.lastIndex = 0;
     const questions: TestownikQuestion[] = [];
-    let questionMatch: RegExpExecArray | null;
-    while (
-      (questionMatch = QUESTION_REGEX.exec(this.inputContent)) != null &&
-      questionMatch.groups != null
-    ) {
-      const answers: TestownikAnswer[] = [];
-      ANSWER_REGEX.lastIndex = 0;
-
+    for (const questionMatch of this.inputContent.matchAll(QUESTION_REGEX)) {
+      if (questionMatch.groups == null) {
+        continue;
+      }
       const questionText = questionMatch.groups.question?.trim();
       if (!questionText) {
         logger.warn("Skipping question with no text");
         continue;
       }
 
-      const answersText = questionMatch.groups.answers;
+      const answersText = questionMatch.groups.answers?.trim();
       if (!answersText) {
         logger.warn(`Skipping question with no answers: '${questionText}'`);
         continue;
       }
 
-      let answerMatch: RegExpExecArray | null;
-      while (
-        (answerMatch = ANSWER_REGEX.exec(answersText)) != null &&
-        answerMatch.groups != null
-      ) {
-        const answerText = answerMatch.groups.answer?.trim();
-        if (answerText == null) {
+      const answers: TestownikAnswer[] = [];
+      for (const fullAnswerText of answersText.split(/\r?\n-\s+/)) {
+        const answerMatch = fullAnswerText.match(ANSWER_REGEX);
+        if (answerMatch?.groups == null) {
+          logger.warn(`Skiping invalid answer: ${fullAnswerText}`);
+          continue;
+        }
+        const isCorrect = answerMatch?.groups?.correct != null;
+        const answerText = answerMatch.groups?.answer?.trim();
+        if (!answerText) {
           logger.warn(
             `Skipping answer with no text in question: ${questionText}`,
           );
@@ -51,7 +44,7 @@ export class CcnaAdapter extends BaseAdapter {
         }
         const answer: TestownikAnswer = {
           text: answerText,
-          is_correct: answerMatch.groups.correct != null,
+          is_correct: isCorrect,
         };
         answers.push(answer);
       }
