@@ -1,3 +1,5 @@
+import { parse } from "node:path";
+
 import { readFileSync, writeFileSync } from "node:fs";
 
 import type { AdapterOptions, TestownikQuestion, TestownikQuiz } from "@/types";
@@ -15,6 +17,12 @@ export abstract class BaseAdapter {
   }
 
   protected abstract convertQuestions(): TestownikQuestion[];
+
+  protected generateOutputFilename(): string {
+    const inputFile = parse(this.options.inputFilename);
+    const subExtension = inputFile.ext === ".json" ? ".converted" : "";
+    return `${inputFile.name}${subExtension}.json`;
+  }
 
   private createQuiz(): TestownikQuiz {
     const questions = this.convertQuestions();
@@ -37,7 +45,8 @@ export abstract class BaseAdapter {
   writeOutput(): void {
     const quiz = this.createQuiz();
     const data = JSON.stringify(quiz, null, 2);
-    const filename = this.options.outputFilename;
+    const filename: string =
+      this.options.outputFilename ?? this.generateOutputFilename();
     writeFileSync(filename, data, "utf8");
     logger.info(`Converted quiz written to ${filename}.`);
   }

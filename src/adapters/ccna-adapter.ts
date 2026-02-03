@@ -1,7 +1,7 @@
 import type { TestownikQuestion, TestownikAnswer } from "@/types";
+import { logger } from "@/logging";
 
 import { BaseAdapter } from "./base-adapter";
-import { logger } from "@/logging";
 
 const QUESTION_REGEX =
   /^(?<number>\d+)\.\s+(?<question>[\s\S]+?)\n^-\s+(?<answers>.+(?:\r?\n.+)+)/gm;
@@ -9,7 +9,7 @@ const QUESTION_REGEX =
 const ANSWER_REGEX = /^(?<correct>\[✓\]\s+)?(?<answer>[\s\S]+)/m;
 
 export class CcnaAdapter extends BaseAdapter {
-  convertQuestions() {
+  protected convertQuestions() {
     const questions: TestownikQuestion[] = [];
     for (const questionMatch of this.inputContent.matchAll(QUESTION_REGEX)) {
       if (questionMatch.groups == null) {
