@@ -1,5 +1,6 @@
-import type { AdapterOptions, TestownikQuestion, TestownikQuiz } from "@/types";
 import { readFileSync, writeFileSync } from "node:fs";
+
+import type { AdapterOptions, TestownikQuestion, TestownikQuiz } from "@/types";
 
 export abstract class BaseAdapter {
   protected inputContent!: string;
@@ -16,6 +17,9 @@ export abstract class BaseAdapter {
 
   private createQuiz(): TestownikQuiz {
     const questions = this.convertQuestions();
+    if (questions.length === 0) {
+      throw new Error("Could not find any questions in the input file.");
+    }
     const quiz: TestownikQuiz = {
       title: this.options.quizTitle,
       ...(this.options.quizDescription == null

@@ -1,5 +1,6 @@
-import { BaseAdapter } from "./base-adapter";
 import type { TestownikQuestion, TestownikAnswer } from "@/types";
+
+import { BaseAdapter } from "./base-adapter";
 
 const QUESTION_REGEX = new RegExp(
   String.raw`^(?:(?<number>\d+)\.\s+)?(?<question>.+)$\n(?<answers>(?:(?=^-\s).+$\n?)+\n?)`,
