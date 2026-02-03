@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/kguzek/testownik-converter/compare/v1.0.5...v1.1.0) (2026-02-03)
+
+
+### Features
+
+* **cli:** automatic filename ([d5e83fa](https://github.com/kguzek/testownik-converter/commit/d5e83fa8eba601f46f744acdbe4ecf9b03ab12b0))
+
 ## [1.0.5](https://github.com/kguzek/testownik-converter/compare/v1.0.4...v1.0.5) (2026-02-03)
 
 
