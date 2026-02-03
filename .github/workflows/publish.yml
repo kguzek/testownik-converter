@@ -34,8 +34,17 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Check commit name
+        run: pnpm commitlint --from-last-tag --verbose
+        if: always()
+
+      - name: Check for unused dependencies
+        run: pnpm knip
+        if: always()
+
       - name: Build
         run: pnpm run build
+        if: always()
 
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures

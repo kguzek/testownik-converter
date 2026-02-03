@@ -4,7 +4,7 @@ export const AUTHOR_URL = "https://github.com/kguzek";
 import pkg from "../../package.json";
 
 export const REPO_NAME = "Testownik Converter";
-export const REPO_SLUG = "testownik-converter";
+const REPO_SLUG = "testownik-converter";
 export const REPO_URL = `${AUTHOR_URL}/${REPO_SLUG}`;
 
 export const TESTOWNIK_URL = "https://testownik.solvro.pl";
